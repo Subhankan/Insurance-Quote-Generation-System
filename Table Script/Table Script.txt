@@ -1,0 +1,156 @@
+create table User_Role(user_name varchar2(20),password varchar2(12),role_code varchar2(10));
+
+alter table User_Role add constraint pk_user primary key(user_name);
+
+Insert into user_role values('sushanta97','abc123','Insured');
+
+Insert into user_role values('raya97','abc123','Agent');
+
+Insert into user_role values('pintu97','abc123','Admin');
+
+
+
+ 
+create table accounts(
+               account_number number(10) primary key,
+               insured_name varchar2(30),
+               insured_street varchar2(40),
+               insured_city varchar2(15),
+               insured_state varchar2(15),
+               insured_zip number(5),
+               business_segment varchar2(30),
+               user_name varchar2(20)
+             );
+
+alter table accounts add constraint fk_key foreign key(user_name) references user_role(user_name);
+
+
+
+create table policy(
+		policy_number number(10) primary key,
+		policy_premium decimal(8),
+		account_number number(10),
+	 	constraint fk1_key foreign key (account_number) references accounts(account_number)
+		);
+
+
+create table policy_details(
+			policy_number number(10),
+			question_id varchar(15),
+			answer varchar(30)	
+			constraint fk2_key foreign key (policy_number) references policy (policy_number) 
+			);
+
+
+
+
+create sequence business_seg_seq start with 100;
+create table Business_Segment(
+		bus_seg_id varchar2(10) ,
+		bus_seg_seq number(3),
+		bus_seg_name varchar2(20)
+	 	)
+alter table business_segment add constraint pk1 primary key(bus_seg_id);
+Insert into Business_Segment values('bus-auto', bus_seg_seq.nextval(), 'Business Auto');
+Insert into Business_Segment values('rest', bus_seg_seq.nextval(), 'Restaurant');
+Insert into Business_Segment values('apt', bus_seg_seq.nextval(), 'Apartment');
+Insert into Business_Segment values('gen-mer', bus_seg_seq.nextval(), 'General Merchant');
+
+
+
+create sequence pol_ques_sec start with 1000;
+
+create table Policy_Questions(
+			pol_ques_id varchar2(10) primary key,
+			pol_ques_seq number(3),
+			bus_seg_id varchar2(10),
+			pol_ques_desc varchar2(80),
+			pol_ques_ans1 varchar2(30),
+			pol_ques_ans1_weightage number(5),
+			pol_ques_ans2 varchar2(30),
+			pol_ques_ans2_weightage number(5),
+			pol_ques_ans3 varchar2(30),
+			pol_ques_ans3_weightage number(5),
+			constraint fk2 foreign key(bus_seg_id) references business_segment(bus_seg_id)
+			);
+
+
+Insert into policy_questions values('veh_type', pol_ques_seq.nextval(), 'bus_auto',
+				'Vehicle Type', 'Light', 200,'Heavy', 400, 'Truck', 600);
+Insert into policy_questions values('veh_mod_y', pol_ques_seq.nextval(), 'bus_auto',
+				'Vehicle Model Year', 'Less than 2000', 200,'2001 to 2010', 400, 'More than 2010', 600);
+Insert into policy_questions values('veh_mod', pol_ques_seq.nextval(), 'bus_auto',
+				'Vehicle Model', 'High Segment', 200,'Mid Segment', 400, 'Economy', 600);
+Insert into policy_questions values('Daily_dis', pol_ques_seq.nextval(), 'bus_auto',
+				'Daily Commute Distance', 'Less than 21', 200,'21 to 50', 400, 'Greater than 50', 600);
+Insert into policy_questions values('ser_cen', pol_ques_seq.nextval(), 'bus_auto',
+				'Service Center', 'Authorized', 200,'Non Authorized', 400, 'none', 0);
+Insert into policy_questions values('col_cov', pol_ques_seq.nextval(), 'bus_auto',
+				'Collision Coverage Limit', '10000 to 30000', 200,'30001 to 50000', 400, '500001 to 100000', 600);
+Insert into policy_questions values('bod_inj', pol_ques_seq.nextval(), 'bus_auto',
+				'BOdily Injury Limit', '10000 to 30000', 200,'30001 to 50000', 400, '500001 to 100000', 600);
+Insert into policy_questions values('uins_moto', pol_ques_seq.nextval(), 'bus_auto',
+				'Uninsured Motorist', '10000 to 30000', 200,'30001 to 50000', 400, '500001 to 100000', 600);
+Insert into policy_questions values('uhit_theft', pol_ques_seq.nextval(), 'bus_auto',
+				'Unknown Hit or Theft Coverage','10000 to 30000', 200,'30001 to 50000', 400, '500001 to 100000', 600);
+Insert into policy_questions values('pro_lia', pol_ques_seq.nextval(), 'bus_auto',
+				'Property And Liability', '10000 to 30000', 200,'30001 to 50000', 400, '500001 to 100000', 600);
+
+
+
+Insert into policy_questions values('res_type', pol_ques_seq.nextval(), 'rest',
+				'Restaurant Type', 'Only Dining', 200,'Dining with Bar', 400, 'Dining with Bar and Entertainment', 600);
+Insert into policy_questions values('res_sq_ft', pol_ques_seq.nextval(), 'rest',
+				'Restaurant SQ Ft', 'Less than 1500sq.ft', 200,'From 1500sq.ft to 5000sq.ft', 400, 'More than 5000', 600);
+Insert into policy_questions values('no_of_spr', pol_ques_seq.nextval(), 'rest',
+				'Number of Sprinklers', 'up to 20', 200,'21 to 40', 400, 'More than 40', 600);
+Insert into policy_questions values('no_of_cyl', pol_ques_seq.nextval(), 'rest',
+				'No. of Cylinders in Kitchen', 'up to 5', 200,'from 6 to 15', 400, 'More than 15', 600);
+Insert into policy_questions values('fine_arts', pol_ques_seq.nextval(), 'rest',
+				'Fine Arts', '5000 to 15000', 200,'15000 to 30000', 400, 'More than 30000', 600);
+Insert into policy_questions values('pro_dam', pol_ques_seq.nextval(), 'rest',
+				'Property Damage', 'upto 500000', 200,'from 500000 to 1500000', 400, 'More than 1500000', 600);
+Insert into policy_questions values('equi_break', pol_ques_seq.nextval(), 'rest',
+				'Equipment Breakdown', 'upto 50000', 200,'from 50000 to 200000', 400, 'More than 200000', 600);
+Insert into policy_questions values('lia_cov', pol_ques_seq.nextval(), 'rest',
+				'Liability Coverage', '10000 to 15000', 200,'15001 to 30000', 400, 'More than 30000', 600);
+Insert into policy_questions values('body_inj', pol_ques_seq.nextval(), 'rest',
+				'Bodily Injury', 'upto 25000', 200,'25001 to 50000', 400, 'More than 50000', 600);
+
+
+
+Insert into policy_questions values('apar_sq_ft', pol_ques_seq.nextval(), 'apt',
+				'Apartment Sq.ft', 'upto 15000 sq.ft', 200,'from 1500 to 5000 sq.ft', 400, 'More than 5000', 600);
+Insert into policy_questions values('no_spr_apt', pol_ques_seq.nextval(), 'apt',
+				'Number of sprinklers', 'upto 5', 200,'from 6 to 10', 400, 'More than 10', 600);
+Insert into policy_questions values('build_year', pol_ques_seq.nextval(), 'apt',
+				'Build Year', 'before 2000', 200,'2000 to 2010', 400, 'after 2010', 600);
+Insert into policy_questions values('prop_dam', pol_ques_seq.nextval(), 'apt',
+				'Property Damage', 'upto 500000', 200,'500001 to 1000000', 400, 'More than 1000000', 600);
+Insert into policy_questions values('BIL', pol_ques_seq.nextval(), 'apt',
+				'Bodily Injury Limit', '50000-100000', 200,'1000001-3000000', 400, '300001-500000', 600);
+Insert into policy_questions values('nof', pol_ques_seq.nextval(), 'apt',
+				'Number of floors', 'Less than 10', 200,'10 to 30', 400, 'More than 30', 600);
+Insert into policy_questions values('nofe', pol_ques_seq.nextval(), 'apt',
+				'Number of fire exits', '1', 200,'2 to 3', 400, 'more than 3', 600);
+Insert into policy_questions values('atl', pol_ques_seq.nextval(), 'apt',
+				'Asset Theft Limit', 'upto 50000', 200,'50000 to 100000', 400, '100001 to 200000 ', 600);
+
+
+
+Insert into policy_questions values('bustyp', pol_ques_seq.nextval(), 'gen_mer',
+				'Business type', 'General Store', 200,'Hardware', 400, 'Clothing', 600);
+Insert into policy_questions values('assval', pol_ques_seq.nextval(), 'gen_mer',
+				'Asset Value', 'less than 1000000', 200,'1000001 to 2500000', 400, 'More than 2500001', 600);
+Insert into policy_questions values('infoobj', pol_ques_seq.nextval(), 'gen_mer',
+				'Inflammable Objects', 'Yes', 200,'No', 400, 'none', 0);
+Insert into policy_questions values('prosiz', pol_ques_seq.nextval(), 'gen_mer',
+				'Property Size', 'less than 5000 sq ft', 200,'5000 to 10000 sq ft', 400, 'More than 10000 sq ft', 600);
+Insert into policy_questions values('prodam', pol_ques_seq.nextval(), 'gen_mer',
+				'Property Damage', 'upto 500000', 200,'500000 to 1000000 sq ft', 400, '1000000 to 1500000', 600);
+Insert into policy_questions values('bodinj', pol_ques_seq.nextval(), 'gen_mer',
+				'Bodily Injury', '10000 to 30000', 200,'30001 to 50000 sq ft', 400, '50001 to 10000', 600);
+Insert into policy_questions values('assthf', pol_ques_seq.nextval(), 'gen_mer',
+				'Asset Theft Limit', 'upto 50000', 200,'50000 to 100000', 400, '100001 to 200000', 600);
+Insert into policy_questions values('liacov', pol_ques_seq.nextval(), 'gen_mer',
+				'Liability Coverage', '10000 to 30000', 200,'10000 to 30000', 400, '10000 to 30000', 600);
